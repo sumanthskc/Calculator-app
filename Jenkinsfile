@@ -9,14 +9,17 @@ pipeline {
             }
         }
 
-        stage('Run Tests in Docker') {
+        stage('Build Docker Image') {
             steps {
-                bat 'docker pull python:3.11-slim'
-                bat '''
-                docker run --rm -v "%CD%:/app" -w /app python:3.11-slim \
-                python -m unittest test_calculator.py
-                '''
+                bat 'docker build -t calculator-app .'
+            }
+        }
+
+        stage('Run Tests in Container') {
+            steps {
+                bat 'docker run --rm calculator-app'
             }
         }
     }
 }
+
