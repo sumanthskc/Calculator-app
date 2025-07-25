@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11-slim'
-        }
-    }
+    agent any
 
     stages {
         stage('Checkout Code') {
@@ -12,15 +8,13 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Run Tests in Docker') {
             steps {
-                sh 'pip install -r requirements.txt'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'python -m unittest test_calculator.py'
+                bat 'docker pull python:3.11-slim'
+                bat '''
+                docker run --rm -v "%CD%:/app" -w /app python:3.11-slim \
+                python -m unittest test_calculator.py
+                '''
             }
         }
     }
