@@ -11,13 +11,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t calculator-app ."
+                sh "sudo docker build -t calculator-app ."
             }
         }
 
         stage('Run Tests in Container') {
             steps {
-                sh "docker run --rm calculator-app"
+                sh "sudo docker run --rm calculator-app"
             }
         }
     }
